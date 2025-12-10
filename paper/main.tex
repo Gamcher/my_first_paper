@@ -2,6 +2,7 @@
 \usepackage{arxiv}
 
 \usepackage[utf8]{inputenc}
+\usepackage{lmodern}
 \usepackage[english, russian]{babel}
 \usepackage[T1]{fontenc}
 \usepackage{url}
@@ -18,9 +19,7 @@
 
 \title{Построение мультиагентной системы работы с ключевыми графиками научных статей}
 
-\author{ Maksim M.~Mariasov\thanks{Use footnote for providing further
-		information about author (webpage, alternative
-		address)---\emph{not} for acknowledging funding agencies.} \\
+\author{ Maksim M.~Mariasov \\
         Department of Mathematical Methods of Forecasting \\
         Moscow State University \\
         Lomonosov Moscow State University \\
@@ -70,87 +69,48 @@ pdfkeywords={First keyword, Second keyword, More},
 \end{abstract}
 
 
-\keywords{First keyword \and Second keyword \and More}
+\keywords{Explainable AI \and Key Figure Selection \and Multimodal Analysis \and Multi-agent Systems}
 
-\section{Introduction}
-\lipsum[2]
-\lipsum[3]
+\section{Введение}
+% Зачем это надо
+Ключевые графики научных статей часто содержат основные результаты исследования и дополняют текстовые выводы, что делает их важным инструментом для быстрого понимания публикации \citep{Lee2016Viziometrics}. Выделение ключевых графиков требует изучение содержания статьи, что замедляет процесс понимания релевантности её для исследователя. Автоматизация процесса выбора ключевых графиков позволяет эффективнее анализировать литературу и быстрее выявлять значимые результаты. Более того, система с объяснимостью повышает доверие пользователей, делая процесс прозрачным.
 
-\section{Headings: first level}
-\label{sec:headings}
+% Как это решать
+Существующие подходы для выявления ключевых графиков опираются на текстовые представления \citep{Beltagy2019SciBERT, Reimers2019SentenceBERT, scirus} или на визуальные представления графиков \citep{Radford2021CLIP, Li2022BLIP, Li2023BLIP2}. Мультимодальные модели объединяют информацию из текста и графиков, что позволяет улучшить качество выбора ключевых визуальных элементов. Для упорядочивания графиков по значимости применяются методы ранжирования, включая парный (pairwise) и списковый (listwise) подходы, рассмотренные в работе \citet{Liu2007LTR}. Для интерпретируемости решений используются методы Explainable AI, такие как Grad-CAM \citep{Selvaraju2017GradCAM}, Grad-CAM++ \citep{Chattopadhay2018GradCAMplusplus}, Score-CAM \citep{Wang2019ScoreCAM}, Text-CAM \citep{Zhang2025TextCAM} и LIME \citep{Ribeiro2016LIME}. Кроме того, применяются подходы рационализации \citep{Zhou2024IfCLIPCouldTalk, Chen2025ExplainableSaliency, Hendricks2018MultimodalExplanations}, которые позволяют объяснить, какие признаки текста или изображения оказали наибольшее влияние на решение модели. Использование мультиагентных систем обеспечивает модульность решения, независимость обработки разных модальностей и масштабируемость, облегчая интеграцию различных агентов для работы с текстом, изображениями и ранжированием.
 
-\lipsum[4] See Section \ref{sec:headings}.
+% Какие проблемы решений
+Существующие решения сохраняют ряд существенных ограничений. Во-первых, интеграция текстовой и визуальной модальностей остаётся сложной задачей вследствие различий в их структуры, что затрудняет построение согласованных представлений. Во-вторых, большинство методов автоматического определения ключевых графиков функционируют как «чёрные ящики», не предоставляя интерпретируемых объяснений, что ограничивает их практическую применимость и снижает доверие со стороны исследователей. В-третьих, модели, использующие крупные архитектуры для оценки межмодального сходства, характеризуются высокой вычислительной сложностью, особенно при масштабировании на большие наборы научных публикаций. Наконец, распространённые подходы анализируют графики изолированно, без учёта глобального контекста статьи и взаимосвязей между визуальными элементами, что приводит к снижению точности и устойчивости выбора ключевых графиков.
 
-\subsection{Headings: second level}
-\lipsum[5]
-\begin{equation}
-	\xi _{ij}(t)=P(x_{t}=i,x_{t+1}=j|y,v,w;\theta)= {\frac {\alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}{\sum _{i=1}^{N} \sum _{j=1}^{N} \alpha _{i}(t)a^{w_t}_{ij}\beta _{j}(t+1)b^{v_{t+1}}_{j}(y_{t+1})}}
-\end{equation}
+% Предлагаемое решение задачи
+В данной работе предлагается мультиагентная система, включающая агента обработки текста (Text Agent) и агента обработки изображений (Image Agent), формирующих представления текста и графиков, а также агента ранжирования (Ranking Agent), который объединяет эти представления для окончательного выбора ключевых графиков. Агент объяснений (Explainable Agent) интерпретирует решения системы, демонстрируя вклад отдельных текстовых и визуальных признаков в выбор графиков. Такая архитектура позволяет использовать сильные стороны каждой модальности, при этом централизованно производя ранжирование и обеспечивая объяснимость процесса. Система способна адаптироваться к различным форматам научных статей и обеспечивает воспроизводимость выбора ключевых графиков.
 
-\subsubsection{Headings: third level}
-\lipsum[6]
+% Какие результаты у того, что предложили
+Предложенный подход демонстрирует высокую точность выбора ключевых графиков на размеченном наборе статей, показывая согласованность с оценками экспертов. Мультиагентная архитектура обеспечивает более стабильные и интерпретируемые результаты, позволяя проводить гибкие эксперименты с отдельными агентами. Агент объяснений предоставляет исследователям возможность визуально и текстово анализировать причины выбора графиков, повышая прозрачность и доверие к системе. В целом, предложенная система способствует автоматизации анализа научных публикаций и улучшает инструменты для выявления наиболее значимых результатов исследования.
 
-\paragraph{Paragraph}
-\lipsum[7]
+\section{Обзор литературы}
 
+\subsection{Представление текста}
+Текстовые данные научных статей содержат ключевую информацию о результатах исследований. Аннотации, подписи к графикам и упоминания графиков в тексте могут содержать в себе признаки их значимости. Модели для извлечения текстовых эмбеддингов, такие как \textbf{SciBERT} \citep{Beltagy2019SciBERT}, \textbf{Sentence-BERT} \citep{Reimers2019SentenceBERT} и \textbf{SciRus} \citep{scirus}, позволяют формировать векторные представления текста, которые применяются для оценки значимости графиков и их связи с основными результатами статьи.
 
+\subsection{Представление изображений}
+Графики и диаграммы отражают результаты статьи, поэтому методы, опирающиеся только на текстовые данные не способны быть полными. Для извлечения признаков изображений применяются модели \textbf{CLIP} \citep{Radford2021CLIP}, \textbf{BLIP} \citep{Li2022BLIP} и \textbf{BLIP-2} \citep{Li2023BLIP2}, которые создают компактные представления графиков и позволяют сравнивать их с текстовыми описаниями. 
 
-\section{Examples of citations, figures, tables, references}
-\label{sec:others}
+\subsection{Мультимодальные представления}
+Объединение текстовой и визуальной информации повышает точность выявления ключевых графиков. Мультимодальные модели, включая BLIP \citep{Li2022BLIP}, BLIP-2 \citep{Li2023BLIP2}, \textbf{LamRA} \citep{Liu2025LamRA} и \textbf{PaLI-3} \citep{Chen2023PaLI3}, объединяют представления текста и изображений в единое пространство, учитывая взаимосвязь между подписью и визуальными особенностями графика, что позволяет эффективно анализировать связи между двумя модальностями.
 
-\subsection{Citations}
-Citations use \verb+natbib+. The documentation may be found at
-\begin{center}
-	\url{http://mirrors.ctan.org/macros/latex/contrib/natbib/natnotes.pdf}
-\end{center}
+\subsection{Ранжирование}
+Для упорядочивания графиков по значимости применяются методы \textbf{Learning-to-Rank}: парный (pairwise) и списковый (listwise) подходы \citep{Liu2007LTR}. Также рассматриваются методы на основе обучения с подкреплением (RL) \citep{Wang2024MultimodalRL} и нейросетевые ранжирующие модели (MLP, Poly-encoders \citep{Humeau2019PolyEncoders}), которые учитывают сложные взаимосвязи между текстовыми и визуальными признаками.
 
-Here is an example usage of the two main commands (\verb+citet+ and \verb+citep+): Some people thought a thing \citep{kour2014real, hadash2018estimate} but other people thought something else \citep{kour2014fast}. Many people have speculated that if we knew exactly why \citet{kour2014fast} thought this\dots
+\subsection{Explainable AI и рационализации}
+Интерпретируемость решений моделей критична для доверия пользователей. Для визуальных моделей применяются методы \textbf{Grad-CAM} \citep{Selvaraju2017GradCAM}, \textbf{Grad-CAM++} \citep{Chattopadhay2018GradCAMplusplus}, \textbf{Score-CAM} \citep{Wang2019ScoreCAM} и \textbf{Text-CAM} \citep{Zhang2025TextCAM}. Для текста и мультимодальных решений используются \textbf{LIME} \citep{Ribeiro2016LIME} и подходы рационализации \citep{Zhou2024IfCLIPCouldTalk, Chen2025ExplainableSaliency, Hendricks2018MultimodalExplanations}, позволяющие показать, какие признаки текста или изображения оказали наибольшее влияние на выбор ключевых графиков.
 
-\subsection{Figures}
-\lipsum[10]
-See Figure \ref{fig:fig1}. Here is how you add footnotes. \footnote{Sample of the first footnote.}
-\lipsum[11]
+\section{Постановка задачи}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\textwidth]{../figures/log_reg_cs_exp.eps}
-	\caption{Sample figure caption.}
-	\label{fig:fig1}
-\end{figure}
+%\section{Предложенный  метод}
 
-\subsection{Tables}
-See awesome Table~\ref{tab:table}.
+\section{Эксперименты}
 
-The documentation for \verb+booktabs+ (`Publication quality tables in LaTeX') is available from:
-\begin{center}
-	\url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-
-
-\begin{table}
-	\caption{Sample table title}
-	\centering
-	\begin{tabular}{lll}
-		\toprule
-		\multicolumn{2}{c}{Part}                   \\
-		\cmidrule(r){1-2}
-		Name     & Description     & Size ($\mu$m) \\
-		\midrule
-		Dendrite & Input terminal  & $\sim$100     \\
-		Axon     & Output terminal & $\sim$10      \\
-		Soma     & Cell body       & up to $10^6$  \\
-		\bottomrule
-	\end{tabular}
-	\label{tab:table}
-\end{table}
-
-\subsection{Lists}
-\begin{itemize}
-	\item Lorem ipsum dolor sit amet
-	\item consectetur adipiscing elit.
-	\item Aliquam dignissim blandit est, in dictum tortor gravida eget. In ac rutrum magna.
-\end{itemize}
-
+\section{Заключение}
 
 \bibliographystyle{unsrtnat}
 \bibliography{references}
